@@ -68,16 +68,21 @@ chunk_disassemble (Chunk *chunk) {
             buf[j] = '0';
         }
 
-        if (!opcode_has_args (opcode)) {
+        size_t args_count = opcode_args_count (opcode);
+        if (args_count == 0) {
             sprintf (buf + (count_len - i_len), "%zu: %s", i, opcode_buf);
         } else {
-            ++i;
+            ++i; // skip
+            size_t arg = 0;
+            for (size_t j = 0; j < args_count; ++j, ++i) {
+                arg |= (size_t) chunk->bytecode[i] << ((args_count - j - 1ULL) * 8ULL);
+            }
             sprintf (
                 buf + (count_len - i_len),
-                "%zu: %s (%u)",
-                i - 1,
+                "%zu: %s (%zu)",
+                i - args_count,
                 opcode_buf,
-                chunk->bytecode[i]);
+                arg);
         }
         printf ("%s\n", buf);
     }

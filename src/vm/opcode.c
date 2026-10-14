@@ -35,11 +35,12 @@ opcode_disassemble (OpCode code, char *buf) {
     }
 }
 
-int
-opcode_has_args (OpCode code) {
-    for (size_t i = 0; i < sizeof (OPCODES_WITH_ARGS) / sizeof (OpCode); ++i) {
-        if (OPCODES_WITH_ARGS[i] == code) {
-            return 1;
+size_t
+opcode_args_count (OpCode code) {
+    for (size_t i = 0; i < sizeof (OPCODES_WITH_ARGS) / sizeof (OPCODES_WITH_ARGS[0]);
+         ++i) {
+        if (OPCODES_WITH_ARGS[i].code == code) {
+            return OPCODES_WITH_ARGS[i].count;
         }
     }
     return 0;
