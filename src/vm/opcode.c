@@ -30,6 +30,7 @@ opcode_disassemble (OpCode code, char *buf) {
         variant (OpJumpZero);
         variant (OpJump);
         variant (OpRet);
+        variant (OpHalt);
 #undef variant
     }
 }
