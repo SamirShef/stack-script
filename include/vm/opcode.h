@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 typedef enum : uint8_t {
-#define op(name) name,
+#define op(name) Op##name,
 #include "opcode.def"
 #undef op
 } OpCode;
