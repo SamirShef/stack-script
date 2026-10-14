@@ -28,6 +28,7 @@ opcode_disassemble (OpCode code, char *buf) {
         variant (OpStore);
         variant (OpCall);
         variant (OpJumpZero);
+        variant (OpJump);
         variant (OpRet);
 #undef variant
     }
