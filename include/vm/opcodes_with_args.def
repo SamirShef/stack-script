@@ -1,0 +1,4 @@
+op(Push)
+op(Load)
+op(Store)
+op(Call)

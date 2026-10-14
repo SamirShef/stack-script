@@ -21,5 +21,6 @@ main (int argc, char *argv[]) {
     chunk_add_inst (&chunk, OpPrint);
 
     vm_add_chunk (&vm, chunk);
+    chunk_disassemble (&chunk);
     return 0;
 }

@@ -24,3 +24,6 @@ chunk_add_inst (Chunk *chunk, uint8_t code);
 
 size_t
 chunk_add_constant (Chunk *chunk, Value constant);
+
+void
+chunk_disassemble (Chunk *chunk);

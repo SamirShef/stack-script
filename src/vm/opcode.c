@@ -1,5 +1,6 @@
 #include "vm/opcode.h"
 
+#include <stddef.h>
 #include <stdio.h>
 
 void
@@ -31,4 +32,14 @@ opcode_disassemble (OpCode code, char *buf) {
         variant (OpRet);
 #undef variant
     }
+}
+
+int
+opcode_has_args (OpCode code) {
+    for (size_t i = 0; i < sizeof (OPCODES_WITH_ARGS) / sizeof (OpCode); ++i) {
+        if (OPCODES_WITH_ARGS[i] == code) {
+            return 1;
+        }
+    }
+    return 0;
 }

@@ -1,7 +1,10 @@
 #include "vm/chunk.h"
 
+#include "vm/opcode.h"
 #include "vm/value.h"
 
+#include <math.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -49,4 +52,33 @@ chunk_add_constant (Chunk *chunk, Value constant) {
     }
     chunk->consts[chunk->consts_count++] = constant;
     return chunk->consts_count - 1;
+}
+
+void
+chunk_disassemble (Chunk *chunk) {
+    size_t count_len = (size_t) log10 ((double) chunk->count) + 1;
+    for (size_t i = 0; i < chunk->count; ++i) {
+        size_t i_len = (size_t) log10 (i != 0 ? (double) i : 1) + 1;
+        char   buf[128];
+        char   opcode_buf[16];
+        OpCode opcode = (OpCode) chunk->bytecode[i];
+        opcode_disassemble (opcode, opcode_buf);
+
+        for (size_t j = 0; j < count_len - i_len; ++j) {
+            buf[j] = '0';
+        }
+
+        if (!opcode_has_args (opcode)) {
+            sprintf (buf + (count_len - i_len), "%zu: %s", i, opcode_buf);
+        } else {
+            ++i;
+            sprintf (
+                buf + (count_len - i_len),
+                "%zu: %s (%u)",
+                i - 1,
+                opcode_buf,
+                chunk->bytecode[i]);
+        }
+        printf ("%s\n", buf);
+    }
 }
