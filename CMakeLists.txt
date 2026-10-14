@@ -7,3 +7,4 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 file(GLOB_RECURSE SOURCES "src/*.c")
 add_executable(stack-script ${SOURCES})
+target_include_directories(stack-script PRIVATE include)
