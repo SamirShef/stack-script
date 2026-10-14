@@ -6,3 +6,6 @@ typedef enum : uint8_t {
 #include "opcode.def"
 #undef op
 } OpCode;
+
+void
+opcode_disassemble (OpCode code, char *buf);

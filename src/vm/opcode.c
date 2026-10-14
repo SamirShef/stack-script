@@ -1,0 +1,34 @@
+#include "vm/opcode.h"
+
+#include <stdio.h>
+
+void
+opcode_disassemble (OpCode code, char *buf) {
+    switch (code) {
+#define variant(code)                                                                    \
+    case code: sprintf (buf, #code); break;
+        variant (OpAdd);
+        variant (OpSub);
+        variant (OpMul);
+        variant (OpDiv);
+        variant (OpRem);
+        variant (OpGt);
+        variant (OpGtEq);
+        variant (OpLt);
+        variant (OpLtEq);
+        variant (OpEqEq);
+        variant (OpNEq);
+        variant (OpNot);
+        variant (OpNeg);
+        variant (OpDup);
+        variant (OpPush);
+        variant (OpPop);
+        variant (OpPrint);
+        variant (OpLoad);
+        variant (OpStore);
+        variant (OpCall);
+        variant (OpJumpZero);
+        variant (OpRet);
+#undef variant
+    }
+}
