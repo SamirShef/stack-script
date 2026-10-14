@@ -8,10 +8,12 @@
 
 #define STACK_SIZE 256
 #define CALL_STACK_SIZE 64
+#define CHUNKS_DEFAULT_CAP 8
 
 typedef struct {
     Chunk    *chunks;
     size_t    chunks_count;
+    size_t    chunks_cap;
     size_t    ip;
     Value     stack[STACK_SIZE];
     CallFrame call_stack[CALL_STACK_SIZE];
