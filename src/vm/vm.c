@@ -236,8 +236,34 @@ vm_run (VM *vm) {
         case OpLoad: break;
         case OpStore: break;
         case OpCall: break;
-        case OpJumpZero: break;
+        case OpJumpZero: {
+            Value cond = vm_pop_stack (vm);
+            Value res;
+            if (!val_not (cond, &res)) {
+                perror ("Cannot invert value");
+                return RcError;
+            }
+            size_t major = vm_read_arg (vm);
+            size_t midle = vm_read_arg (vm);
+            size_t minor = vm_read_arg (vm);
+            size_t idx   = (major << 16ULL) | (midle << 8ULL) | minor;
+            if (cond.data.integer == 0) {
+                vm->ip = idx;
+            }
+            break;
+        }
+        case OpJump: {
+            size_t major = vm_read_arg (vm);
+            size_t midle = vm_read_arg (vm);
+            size_t minor = vm_read_arg (vm);
+            size_t idx   = (major << 16ULL) | (midle << 8ULL) | minor;
+            vm->ip       = idx;
+            break;
+        }
         case OpRet: break;
+        case OpHalt:
+            // halt
+            break;
         }
     }
     return RcSuccess;
