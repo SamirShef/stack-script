@@ -4,6 +4,7 @@
 #include "vm/value.h"
 
 #include <stddef.h>
+#include <stdint.h>
 #include <string.h>
 
 #define STACK_SIZE 256
@@ -16,12 +17,34 @@ typedef struct {
     size_t    chunks_cap;
     size_t    ip;
     Value     stack[STACK_SIZE];
+    size_t    stack_count;
     CallFrame call_stack[CALL_STACK_SIZE];
+    size_t    call_stack_count;
     size_t    frame_idx;
 } VM;
+
+typedef enum : uint8_t { RcSuccess = 0, RcError } ResultCode;
 
 VM
 vm_create ();
 
 size_t
 vm_add_chunk (VM *vm, Chunk chunk);
+
+size_t
+vm_push_call_frame (VM *vm, CallFrame frame);
+
+void
+vm_pop_call_frame (VM *vm);
+
+size_t
+vm_read_arg (VM *vm);
+
+size_t
+vm_push_stack (VM *vm, Value val);
+
+Value
+vm_pop_stack (VM *vm);
+
+ResultCode
+vm_run (VM *vm);
