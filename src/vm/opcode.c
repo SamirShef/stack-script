@@ -20,7 +20,6 @@ opcode_disassemble (OpCode code, char *buf) {
         variant (OpEqEq);
         variant (OpNEq);
         variant (OpNot);
-        variant (OpNeg);
         variant (OpDup);
         variant (OpPush);
         variant (OpPop);
