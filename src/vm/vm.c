@@ -233,8 +233,10 @@ vm_run (VM *vm) {
             }
             break;
         }
-        case OpLoad: break;
-        case OpStore: break;
+        case OpLoadGlobal: break;
+        case OpStoreGlobal: break;
+        case OpLoadLocal: break;
+        case OpStoreLocal: break;
         case OpCall: break;
         case OpJumpZero: {
             Value cond = vm_pop_stack (vm);

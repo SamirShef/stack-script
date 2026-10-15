@@ -24,8 +24,10 @@ opcode_disassemble (OpCode code, char *buf) {
         variant (OpPush);
         variant (OpPop);
         variant (OpPrint);
-        variant (OpLoad);
-        variant (OpStore);
+        variant (OpLoadGlobal);
+        variant (OpStoreGlobal);
+        variant (OpLoadLocal);
+        variant (OpStoreLocal);
         variant (OpCall);
         variant (OpJumpZero);
         variant (OpJump);
