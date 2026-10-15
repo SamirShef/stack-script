@@ -77,6 +77,7 @@ chunk_disassemble (Chunk *chunk) {
             for (size_t j = 0; j < args_count; ++j, ++i) {
                 arg |= (size_t) chunk->bytecode[i] << ((args_count - j - 1ULL) * 8ULL);
             }
+            --i; // will be skipped at the end
             sprintf (
                 buf + (count_len - i_len),
                 "%zu: %s (%zu)",
