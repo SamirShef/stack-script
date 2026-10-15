@@ -16,7 +16,8 @@ vm_create () {
                  .ip               = 0,
                  .stack_count      = 0,
                  .call_stack_count = 0,
-                 .frame_idx        = 0 };
+                 .frame_idx        = 0,
+                 .globals_count    = 0 };
 }
 
 size_t
@@ -26,7 +27,7 @@ vm_add_chunk (VM *vm, Chunk chunk) {
         vm->chunks     = malloc (vm->chunks_cap * sizeof (Chunk));
     } else if (vm->chunks_cap <= vm->chunks_count) {
         vm->chunks_cap *= 2;
-        void *tmp = realloc (vm->chunks, vm->chunks_count * sizeof (Chunk));
+        void *tmp = realloc (vm->chunks, vm->chunks_cap * sizeof (Chunk));
         if (tmp == NULL) {
             perror ("Realloc is fail");
             exit (1);
@@ -63,6 +64,24 @@ Value
 vm_pop_stack (VM *vm) {
     --vm->stack_count;
     return vm->stack[vm->stack_count];
+}
+
+size_t
+vm_add_global (VM *vm, Value val) {
+    if (vm->globals_cap == 0) {
+        vm->globals_cap = GLOBALS_DEFAULT_CAP;
+        vm->globals     = malloc (vm->globals_cap * sizeof (Value));
+    } else if (vm->globals_cap <= vm->globals_count) {
+        vm->globals_cap *= 2;
+        void *tmp = realloc (vm->globals, vm->globals_cap * sizeof (Value));
+        if (tmp == NULL) {
+            perror ("Realloc is fail");
+            exit (1);
+        }
+        vm->globals = tmp;
+    }
+    vm->globals[vm->globals_count++] = val;
+    return vm->globals_count - 1;
 }
 
 ResultCode
@@ -233,10 +252,26 @@ vm_run (VM *vm) {
             }
             break;
         }
-        case OpLoadGlobal: break;
-        case OpStoreGlobal: break;
-        case OpLoadLocal: break;
-        case OpStoreLocal: break;
+        case OpLoadGlobal: {
+            size_t idx = vm_read_arg (vm);
+            vm_push_stack (vm, vm->globals[idx]);
+            break;
+        }
+        case OpStoreGlobal: {
+            size_t idx       = vm_read_arg (vm);
+            vm->globals[idx] = vm_pop_stack (vm);
+            break;
+        }
+        case OpLoadLocal: {
+            size_t idx = vm_read_arg (vm);
+            vm_push_stack (vm, chunk->locals[idx]);
+            break;
+        }
+        case OpStoreLocal: {
+            size_t idx         = vm_read_arg (vm);
+            chunk->locals[idx] = vm_pop_stack (vm);
+            break;
+        }
         case OpCall: break;
         case OpJumpZero: {
             Value cond = vm_pop_stack (vm);

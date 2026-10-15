@@ -7,9 +7,10 @@
 #include <stdint.h>
 #include <string.h>
 
-#define STACK_SIZE 256
-#define CALL_STACK_SIZE 64
+#define STACK_SIZE 64
+#define CALL_STACK_SIZE 16
 #define CHUNKS_DEFAULT_CAP 8
+#define GLOBALS_DEFAULT_CAP 8
 
 typedef struct {
     Chunk    *chunks;
@@ -21,6 +22,9 @@ typedef struct {
     CallFrame call_stack[CALL_STACK_SIZE];
     size_t    call_stack_count;
     size_t    frame_idx;
+    Value    *globals;
+    size_t    globals_cap;
+    size_t    globals_count;
 } VM;
 
 typedef enum : uint8_t { RcSuccess = 0, RcError } ResultCode;
@@ -45,6 +49,9 @@ vm_push_stack (VM *vm, Value val);
 
 Value
 vm_pop_stack (VM *vm);
+
+size_t
+vm_add_global (VM *vm, Value val);
 
 ResultCode
 vm_run (VM *vm);

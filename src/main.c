@@ -22,6 +22,7 @@ main (int argc, char *argv[]) {
 
     size_t first_const_idx  = chunk_add_constant (&chunk, val_from_integer (5));
     size_t second_const_idx = chunk_add_constant (&chunk, val_from_integer (2));
+    size_t glob             = vm_add_global (&vm, val_from_real (0.04));
 
     chunk_add_inst (&chunk, OpPush);           // 0
     chunk_add_inst (&chunk, first_const_idx);  // 1
@@ -30,23 +31,26 @@ main (int argc, char *argv[]) {
     chunk_add_inst (&chunk, OpJumpZero);       // 4
     chunk_add_inst (&chunk, 0);                // 5
     chunk_add_inst (&chunk, 0);                // 6
-    chunk_add_inst (&chunk, 17);               // 7
+    chunk_add_inst (&chunk, 20);               // 7
     chunk_add_inst (&chunk, OpPush);           // 8
     chunk_add_inst (&chunk, first_const_idx);  // 9
     chunk_add_inst (&chunk, OpDup);            // 10
     chunk_add_inst (&chunk, OpMul);            // 11
-    chunk_add_inst (&chunk, OpPrint);          // 12
-    chunk_add_inst (&chunk, OpJump);           // 13
-    chunk_add_inst (&chunk, 0);                // 14
-    chunk_add_inst (&chunk, 0);                // 15
-    chunk_add_inst (&chunk, 23);               // 16
-    chunk_add_inst (&chunk, OpPush);           // 17
-    chunk_add_inst (&chunk, second_const_idx); // 18
-    chunk_add_inst (&chunk, OpPush);           // 19
-    chunk_add_inst (&chunk, first_const_idx);  // 20
-    chunk_add_inst (&chunk, OpRem);            // 21
-    chunk_add_inst (&chunk, OpPrint);          // 22
-    chunk_add_inst (&chunk, OpHalt);           // 23
+    chunk_add_inst (&chunk, OpLoadGlobal);     // 12
+    chunk_add_inst (&chunk, 0);                // 13
+    chunk_add_inst (&chunk, OpMul);            // 14
+    chunk_add_inst (&chunk, OpPrint);          // 15
+    chunk_add_inst (&chunk, OpJump);           // 16
+    chunk_add_inst (&chunk, 0);                // 17
+    chunk_add_inst (&chunk, 0);                // 18
+    chunk_add_inst (&chunk, 26);               // 19
+    chunk_add_inst (&chunk, OpPush);           // 20
+    chunk_add_inst (&chunk, second_const_idx); // 21
+    chunk_add_inst (&chunk, OpPush);           // 22
+    chunk_add_inst (&chunk, first_const_idx);  // 23
+    chunk_add_inst (&chunk, OpRem);            // 24
+    chunk_add_inst (&chunk, OpPrint);          // 25
+    chunk_add_inst (&chunk, OpHalt);           // 26
 
     vm_add_chunk (&vm, chunk);
     vm_push_call_frame (&vm, (CallFrame){ .chunk = &chunk, .ret_addr = 0 });

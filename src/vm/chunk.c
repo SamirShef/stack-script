@@ -15,7 +15,8 @@ chunk_create () {
                     .cap          = 0,
                     .consts       = NULL,
                     .consts_count = 0,
-                    .consts_cap   = 0 };
+                    .consts_cap   = 0,
+                    .locals_count = 0 };
 }
 
 size_t
@@ -25,7 +26,7 @@ chunk_add_inst (Chunk *chunk, uint8_t code) {
         chunk->bytecode = malloc (chunk->cap * sizeof (uint8_t));
     } else if (chunk->cap <= chunk->count) {
         chunk->cap *= 2;
-        void *tmp = realloc (chunk->bytecode, chunk->count * sizeof (uint8_t));
+        void *tmp = realloc (chunk->bytecode, chunk->cap * sizeof (uint8_t));
         if (tmp == NULL) {
             perror ("Realloc is fail");
             exit (1);
@@ -43,7 +44,7 @@ chunk_add_constant (Chunk *chunk, Value constant) {
         chunk->consts     = malloc (chunk->consts_cap * sizeof (Value));
     } else if (chunk->consts_cap <= chunk->consts_count) {
         chunk->consts_cap *= 2;
-        void *tmp = realloc (chunk->consts, chunk->consts_count * sizeof (Value));
+        void *tmp = realloc (chunk->consts, chunk->consts_cap * sizeof (Value));
         if (tmp == NULL) {
             perror ("Realloc is fail");
             exit (1);
@@ -52,6 +53,24 @@ chunk_add_constant (Chunk *chunk, Value constant) {
     }
     chunk->consts[chunk->consts_count++] = constant;
     return chunk->consts_count - 1;
+}
+
+size_t
+chunk_add_local (Chunk *chunk, Value val) {
+    if (chunk->locals_cap == 0) {
+        chunk->locals_cap = LOCALS_DEFAULT_CAP;
+        chunk->locals     = malloc (chunk->locals_cap * sizeof (Value));
+    } else if (chunk->locals_cap <= chunk->locals_count) {
+        chunk->locals_cap *= 2;
+        void *tmp = realloc (chunk->locals, chunk->locals_cap * sizeof (Value));
+        if (tmp == NULL) {
+            perror ("Realloc is fail");
+            exit (1);
+        }
+        chunk->locals = tmp;
+    }
+    chunk->locals[chunk->locals_count++] = val;
+    return chunk->locals_count - 1;
 }
 
 void
